@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduShare - Ders İlanı Oluştur</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+		
+		*{font-family: 'Poppins', sans-serif;}
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            background-color: #e8e4e6;
+        }
+
+        /* Genel Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #004643;
+            padding: 10px 20px;
+            color: #e8e4e6;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .navbar {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .navbar a {
+            text-decoration: none;
+            color: white;
+            padding: 5px 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        .navbar a:hover {
+            background-color: #abd1c6;
+			color:#004643;
+            border-radius: 5px;
+        }
+
+        /* Profil Menüsü */
+        .profile-menu {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .profile-icon {
+            width: 30px;
+            height: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: white;
+            color: #004643;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+		/* Dropdown Menüsü */
+		.dropdown {
+		    display: none;
+		    position: absolute;
+		    top: 40px;
+		    right: 0;
+		    background-color: white;
+		    border: 1px solid #ddd;
+		    border-radius: 5px;
+		    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+		    min-width: 150px;
+		    z-index: 1000;
+		}
+
+		.dropdown.active {
+		    display: block;
+		}
+
+		.dropdown-btn {
+		    display: block;
+		    width: 100%;
+		    padding: 10px;
+		    border: none;
+		    background-color: white;
+		    color: #333;
+		    font-size: 14px;
+		    text-align: left;
+		    cursor: pointer;
+		    transition: background-color 0.3s ease;
+		}
+
+		.dropdown-btn:hover {
+		    background-color: #f1f1f1;
+		}
+
+        /* İçerik */
+        .content {
+            flex: 1;
+            margin: 20px;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0,0.1);
+            max-width: 700px;
+			height:700px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #004643;
+			margin-top: 0px;
+        }
+
+        label {
+            display: block;
+            margin: 0px 0 5px;
+            font-weight: bold;
+            width: 400px;
+        }
+
+        input, select, textarea, button {
+            width: 20%;
+            padding: 10px;
+            margin-bottom: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1em;
+			
+        }
+
+        button {
+            background-color: #004643;
+            color: #e8e4e6;
+            border: none;
+            cursor: pointer;
+            font-size: 1em;
+			margin-left:270px;
+			margin-top: 5px;
+        }
+
+        button:hover {
+			background-color: #abd1c6;
+			color:#004643;
+        }
+
+		/* Footer */
+		footer {
+		text-align: center;
+		padding: 0px;
+		background-color: #004643;
+		color: white;
+		margin-top: 5px;
+		margin-bottom: 5px;
+		}
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header>
+        <div class="logo">EduShare</div>
+        <nav class="navbar">
+            <a href="http://localhost:8080/show-ads" class="btn">İlanları Görüntüle</a>
+            <a href="http://localhost:8080/home" class="btn">Anasayfa</a>
+            <div class="profile-menu">
+                <div class="profile-icon" onclick="toggleDropdown()">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+                <div class="dropdown" id="profileDropdown">
+                    <button class="dropdown-btn" onclick="account()">Hesap</button>
+                    <button class="dropdown-btn" onclick="showNotifications()">Bildirimlerim</button>
+                    <button class="dropdown-btn" onclick="ads()">İlanlarım</button>
+                    <button class="dropdown-btn" onclick="logout()">Çıkış Yap</button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- İçerik -->
+    <div class="content">
+        <div class="container">
+            <h1>Ders İlanı Oluştur</h1>
+            <form id="create-listing-form">
+                <label for="title">İlan Başlığı:</label>
+                <input style="width: 680px;" type="text" id="title" name="title" required>
+
+                <label for="faculty">Fakülte:</label>
+                <select id="faculty" name="faculty" required>
+                    <option value="">Seçiniz</option>
+                    <option value="mühendislik">Mühendislik Fakültesi</option>
+                    <option value="spor">Spor Fakültesi</option>
+                    <option value="yabancı-diller">Yabancı Diller Fakültesi</option>
+                    <option value="tıp">Tıp Fakültesi</option>
+                    <option value="güzel-sanatlar">Güzel Sanatlar Fakültesi</option>
+                    <option value="eğitim">Eğitim Fakültesi</option>
+                </select>
+
+                <label for="method">Dersi Nasıl İşleyeceksiniz:</label>
+                <textarea style="width: 680px;" id="method" name="method" rows="3" required></textarea>
+
+                <label for="description">Kendiniz Hakkında:</label>
+                <textarea style="width: 680px;" id="description" name="description" rows="3" required></textarea>
+
+                <label for="price">Ücret (₺):</label>
+                <input style="width: 680px;" type="number" id="price" name="price" min="0" required>
+
+                <label for="photo">Profil Fotoğrafı:</label>
+                <input style="width: 680px;" type="file" id="photo" name="photo" accept="image/*">
+
+                <button type="submit">İlanı Oluştur</button>
+            </form>
+        </div>
+    </div>
+
+	<!-- Footer -->
+	<footer>
+	    <p>&copy; 2024 EduShare | Tüm Hakları Saklıdır</p>
+	</footer>
+
+    <script>
+
+        document.getElementById('create-listing-form').addEventListener('submit', async function(event) {
+		    event.preventDefault();
+					
+			const formData = new FormData();
+			formData.append("title", document.getElementById('title').value);
+			formData.append("faculty", document.getElementById('faculty').value);
+			formData.append("method", document.getElementById('method').value);
+			formData.append("description", document.getElementById('description').value);
+			formData.append("price", document.getElementById('price').value);
+
+			const photoInput = document.getElementById("photo");
+			if (photoInput.files.length > 0) {
+				formData.append("photo", photoInput.files[0]); // Dosyanın kendisini ekliyoruz
+			} else {
+				// formData.append("photo", new File([""], "default-profile.png")); // Boş bir dosya oluşturuyoruz
+			}
+
+			// Loglama (FormData'nın içeriği direkt gösterilemez, bu yüzden döngüyle kontrol edebilirsiniz)
+			for (let pair of formData.entries()) {
+				console.log(pair[0] + ': ' + pair[1]);
+			}
+
+			// Fetch çağrısı
+			fetch("http://localhost:8080/ad/create", {
+				method: "POST",
+				body: formData,
+			})
+				.then(response => {
+					if (response.ok) {
+					    alert("İlan başarıyla oluşturuldu!");
+					} else {
+					    alert("Bir hata oluştu.");
+					}
+				})
+				.catch(error => console.error("Hata:", error));			
+
+		});
+
+		function toggleDropdown() {
+		        const dropdown = document.getElementById("profileDropdown");
+		        dropdown.classList.toggle("active");
+		    }
+
+			function showNotifications() {
+				window.location.href = "http://localhost:8080/notifications";
+			}
+			
+			function ads(){
+				window.location.href = "http://localhost:8080/my-ads";
+			}
+
+
+				function logout() {
+				    const loginType = localStorage.getItem("loginType");
+
+				    if (loginType === "google") {
+				        // Google oturumunu sonlandır
+				        google.accounts.id.disableAutoSelect();
+
+				        // Google oturumunu sonlandırma URL'sine yönlendir
+				        const googleLogoutUrl = "https://accounts.google.com/Logout";
+
+				        // Google erişim tokenını da iptal et (isteğe bağlı)
+				        google.accounts.id.revoke(localStorage.getItem("google_user_token"), () => {
+				            console.log("Google oturumu sonlandırıldı.");
+				        });
+
+				        // Google çıkışını yaptıktan sonra logout işlemini devam ettir
+				        window.location.href = googleLogoutUrl;
+				        return; // Logout işlemi burada sonlanır
+				    }
+
+				    // Normal çıkış için backend ile iletişim kur
+				    fetch("http://localhost:8080/user/logout", {
+				        method: "POST",
+				        headers: {
+				            "Content-Type": "application/json"
+				        }
+				    })
+				    .then(response => {
+				        if (response.ok) {
+				            // Kullanıcıyı logout sayfasına yönlendir
+				            window.location.href = "http://localhost:8080/logout";
+				        } else {
+				            console.error("Logout failed:", response.statusText);
+				            alert("Logout işlemi başarısız oldu.");
+				        }
+				    })
+				    .catch(error => {
+				        console.error("Error during logout:", error);
+				        alert("Bir hata oluştu.");
+				    });
+				}
+
+		        // Profil dışında bir yere tıklandığında dropdown'ı kapat
+		        document.addEventListener("click", (event) => {
+		            const profileMenu = document.querySelector(".profile-menu");
+		            const dropdown = document.getElementById("profileDropdown");
+
+		            if (!profileMenu.contains(event.target)) {
+		                dropdown.classList.remove("active");
+		            }
+		        });
+		        
+    </script>
+</body>
+</html>

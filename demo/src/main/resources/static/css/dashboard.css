@@ -1,0 +1,374 @@
+/* Genel Stiller */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+	font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background-color: #F9F9F9;
+    color: #333;
+    line-height: 1.6;
+}
+
+.popup {
+    position: fixed;
+    margin-top:250px;
+    margin-left:500px;
+    width: 600px;
+    height: 400px;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.popup-content {
+    position: relative;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    width: 550px;
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+    cursor: pointer;
+}
+
+.close-btn:hover {
+    color: #f00;
+}
+
+/* Genel Header */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #004643;
+    padding: 10px 20px;
+    color: white;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+	color: #e8e4e6;
+}
+
+.navbar {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.navbar a {
+    text-decoration: none;
+    color: #e8e4e6;
+    padding: 5px 10px;
+    transition: background-color 0.3s ease;
+}
+
+.navbar a:hover {
+    background-color: #abd1c6;
+    border-radius: 5px;
+	color:#004643;
+}
+
+/* Profil Menüsü */
+.profile-menu {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.profile-icon {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    color: #004643;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+/* Dropdown Menüsü */
+.dropdown {
+    display: none;
+    position: absolute;
+    top: 40px;
+    right: 0;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    min-width: 150px;
+    z-index: 1000;
+}
+
+.dropdown.active {
+    display: block;
+}
+
+.dropdown-btn {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    border: none;
+    background-color: white;
+    color: #333;
+    font-size: 14px;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.dropdown-btn:hover {
+    background-color: #f1f1f1;
+}
+
+
+
+
+/* Container */
+.container {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap; /* Kutu sayısının genişlik veya yükseklik sınırlarına göre kırılmasını sağlar */
+    padding: 2rem;
+}
+
+/* Kartların Temel Stili */
+.card {
+    background: #e8e4e6;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: hidden; /* Resim taşmasını önler */
+    width: 60%; /* Kart genişliği */
+    text-align: center;
+    display: flex;
+    flex-direction: row;
+    margin: 0 auto; /* Kartları merkezle */
+    margin-bottom: 3rem; /* Kartlar arasında boşluk */
+}
+
+.card:nth-child(even) { /* Sağda olan kart */
+    flex-direction: row-reverse;
+}
+
+/* Resim Stil */
+.card img {
+    width: 50%;
+    height: 290px;
+    display: block;
+    object-fit: cover;
+    transition: transform 0.3s ease; /* Resimde hover efekti */
+}
+
+.card:hover img {
+    transform: scale(1.1); /* Hover'da resim büyüme efekti */
+}
+
+
+/* Hover Efektleri */
+.card:hover {
+    transform: scale(1.05); /* Kart büyüme efekti */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Hover'da gölge */
+}
+
+/* Kart İçerik Stil */
+.card-content {
+    padding: 1.5rem;
+    width: 50%; /* Kart içerik kısmının genişliği */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: left;
+}
+
+/* Başlık Stil */
+.card h2 {
+    font-size: 1.5rem;
+    color: #004643;
+    margin-bottom: 1rem;
+    transition: color 0.3s ease;
+}
+
+.card h2:hover {
+    color: #388E3C; /* Hover'da başlık rengi */
+}
+
+/* Paragraf Stil */
+.card p {
+    color: #555;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+/* Buton Stil */
+.btn {
+    display: inline-block;
+    margin-top: 1rem;
+    padding: 0.75rem 1.5rem;
+    background-color: #004643;
+    color: #e8e4e6;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+    align-self: flex-start; /* Butonu sola hizala */
+}
+
+.btn:hover {
+    background-color: #abd1c6; /* Hover'da buton rengi */
+	color:#004643;
+}
+
+/* Genel About Us Kart Efekti */
+#about-us {
+    padding: 3rem 1.5rem;
+    text-align: center;
+    margin: 2rem 0;
+}
+
+.about-container {
+    max-width: 900px;
+    margin: 0 auto;
+    background: #e8e4e6;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Animasyon ekledik */
+}
+
+.about-container:hover {
+    transform: scale(1.05); /* Kart büyüme efekti */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Hover'da gölge büyütme */
+}
+
+.about-text {
+    font-size: 0.9rem; /* Normal metinden biraz daha küçük bir font boyutu */
+}
+
+
+#about-us h2, #about-us h3 {
+    color: #004643;
+    transition: transform 0.3s ease, color 0.3s ease; /* Başlık animasyonu */
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+#about-us ul li {
+    background: #e8e4e6;
+    margin-bottom: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-left: 4px solid #0046443;
+    text-align: left;
+    border-radius: 4px;
+    transition: transform 0.3s ease, background 0.3s ease; /* Liste elemanları için animasyon */
+}
+
+#about-us ul li:hover {
+    transform: scale(1.03); /* Liste elemanı büyüme efekti */
+    background: #E8F5E9; /* Hover'da hafif renk değişimi */
+}
+
+
+/* Team Bölümü */
+.team {
+    background-color: #E8F5E9; /* Tüm sayfa için beyaz arka plan */
+    padding: 40px 0;
+    text-align: center;
+}
+
+.team h2 {
+    font-size: 2.5rem;
+    margin-bottom: 40px;
+    color: #004643; /* Site renkleriyle uyumlu mavi ton */
+}
+
+.team .row {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.team .col-6 {
+    text-align: center;
+    padding: 30px;
+    background-color: #fff; /* Beyaz kutular */
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease; /* Animasyon ekledik */
+}
+
+.team .col-6:hover {
+    transform: scale(1.05); /* Kart büyüme efekti */
+}
+
+.team img {
+    width: 60px; /* Görsel boyutunu küçültme */
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 10px;
+}
+
+.team h3 {
+    font-size: 1.2rem;
+    color: #004643; /* Yazı rengi yesil ton */
+}
+
+.team p {
+    font-size: 0.9rem;
+    color: #555; /* Metin rengi koyu gri */
+}
+
+
+/* Contact Us */
+.contact {
+    background-color: white; /* Hafif gri arka plan */
+    padding: 40px 0;
+    text-align: center;
+}
+
+.contact h2 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    color: #004643; /* Site renkleriyle uyumlu mavi ton */
+}
+
+.contact p {
+    font-size: 1rem;
+    color: #555; /* Metin rengi koyu gri */
+}
+
+.contact a {
+    color: #004643;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 1rem;
+    background-color: #004643;
+    color: white;
+    margin-top: 2rem;
+}

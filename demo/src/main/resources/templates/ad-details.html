@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ad Details</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+		
+		*{font-family: 'Poppins', sans-serif;}
+		
+        body {
+            padding: 0;
+            margin: 0;
+            background-color: #e7f7e9;
+        }
+		
+		/* Genel Header */
+		header {
+			position: fixed;
+			width: 100%;
+			top: 0;
+			left: 0;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			background-color: #004643;
+			padding: 10px 0px;
+			color: #e8e4e6;
+			z-index: 1000;
+		}
+		
+        .ad-details-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,128,0,0.2);
+            max-width: 700px;
+            margin: 80px auto; /* Added margin to prevent overlap with header */
+            text-align: center;
+        }
+
+        .ad-details-container h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #004643; /* Koyu yeşil */
+        }
+
+        .ad-details-container img {
+            width: 40%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+		/* Header logo ve navbar */
+		.logo {
+			font-size: 24px;
+			font-weight: bold;
+		}
+
+		.navbar {
+			display: flex;
+			align-items: center;
+			gap: 20px;
+		}
+
+		.navbar a {
+			text-decoration: none;
+			color: white;
+			padding: 5px 10px;
+			transition: background-color 0.3s ease;
+		}
+
+		.navbar a:hover {
+			background-color: #45a049;
+			border-radius: 5px;
+		}
+		
+		/* Profil Menüsü */
+		.profile-menu {
+			position: relative;
+			display: flex;
+			align-items: center;
+		}
+
+		.profile-icon {
+			width: 30px;
+			height: 30px;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			background-color: white;
+			color: #004643;
+			border-radius: 50%;
+			cursor: pointer;
+			font-size: 18px;
+		}
+
+		/* Dropdown Menüsü */
+		.dropdown {
+			display: none;
+			position: absolute;
+			top: 40px;
+			right: 0;
+			background-color: #e8e4e6;
+			border: 1px solid #ddd;
+			border-radius: 5px;
+			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+			min-width: 150px;
+			z-index: 1000;
+		}
+
+		.dropdown.active {
+			display: block;
+		}
+
+		.dropdown-btn {
+			display: block;
+			width: 100%;
+			padding: 10px;
+			border: none;
+			background-color: white;
+			color: #333;
+			font-size: 14px;
+			text-align: left;
+			cursor: pointer;
+			transition: background-color 0.3s ease;
+		}
+
+		.dropdown-btn:hover {
+			background-color: #f1f1f1;
+		}
+
+		.create-ad {
+			background-color: #32cd32;
+			color: white;
+			padding: 10px 15px;
+			border-radius: 4px;
+            font-weight: bold;
+		}
+
+		.create-ad:hover {
+			background-color: #228b22;
+		}
+
+		/* İstek Gönder Butonu */
+		#send-request-btn {
+			margin-top: 20px;
+			padding: 10px 20px;
+			font-size: 16px;
+			cursor: pointer;
+			background-color: #004643;
+			color: white;
+			border: none;
+			border-radius: 5px;
+			transition: background-color 0.3s;
+		}
+
+		#send-request-btn:hover {
+			background-color: #abd1c6;
+			color:#004643;
+		}
+    </style>
+</head>
+<body>
+
+	<!-- Header Section -->
+	<header>
+		<div class="logo">EduShare</div>
+		<nav class="navbar">
+			<a href="http://localhost:8080/home" class="btn">Anasayfa</a>
+			<div class="profile-menu">
+				<div class="profile-icon" onclick="toggleDropdown()">
+					<i class="fa-solid fa-user"></i>
+				</div>
+				<div class="dropdown" id="profileDropdown">
+					<button class="dropdown-btn" onclick="account()">Hesap</button>
+					<button class="dropdown-btn" onclick="showNotifications()">Bildirimlerim</button>
+					<button class="dropdown-btn" onclick="ads()">İlanlarım</button>
+					<button class="dropdown-btn" onclick="logout()">Çıkış Yap</button>
+				</div>
+			</div>
+		</nav>
+	</header>
+
+	<!-- İlan Detayları Kartı -->
+	<div class="ad-details-container" id="ad-details">
+	    <!-- Ad details will be inserted here -->
+	</div>
+
+    <script>
+        // Sayfa yüklendiğinde, URL parametrelerinden ID'yi alıp ilgili ilanı çekiyoruz
+		document.addEventListener('DOMContentLoaded', function() {
+		    const Id = new URLSearchParams(window.location.search).get('id');
+		    console.log(Id);
+		    if (Id) {
+		        fetchAdDetails(Id);
+		    } else {
+		        alert('No ad ID provided');
+		    }
+		});
+
+		function fetchAdDetails(Id) {
+		    fetch(`http://localhost:8080/ad/getDetails/${Id}`)
+		        .then(response => response.json())
+		        .then(adDetails => displayAdDetails(adDetails, Id)) // Id'yi de geçiyoruz
+		        .catch(error => console.error('Error fetching ad details:', error));
+		}
+
+		function displayAdDetails(adDetails, Id) {
+		    const detailsContainer = document.getElementById('ad-details');
+		    
+		    const title = document.createElement('h2');
+		    title.innerText = adDetails.title || 'No Title';
+		    detailsContainer.appendChild(title);
+
+		    const description = document.createElement('p');
+		    description.innerText = adDetails.description || 'No Description';
+		    detailsContainer.appendChild(description);
+
+		    if (adDetails.photo) {
+		        const img = document.createElement('img');
+		        img.src = `data:image/jpeg;base64,${adDetails.photo}`;
+		        img.alt = 'Ad Photo';
+		        detailsContainer.appendChild(img);
+		    } else {
+		        const noPhoto = document.createElement('p');
+		        noPhoto.innerText = 'No Photo Available';
+		        detailsContainer.appendChild(noPhoto);
+		    }
+
+		    const method = document.createElement('p');
+		    method.innerText = `Method: ${adDetails.method || 'N/A'}`;
+		    detailsContainer.appendChild(method);
+
+		    const price = document.createElement('p');
+		    price.innerText = `Fiyat: ₺${adDetails.price || 'N/A'}`;
+		    detailsContainer.appendChild(price);
+
+		    const sendRequestBtn = document.createElement('button');
+		    sendRequestBtn.id = 'send-request-btn';
+		    sendRequestBtn.innerText = 'İstek Gönder';
+		    detailsContainer.appendChild(sendRequestBtn);
+		    
+		    // Event listener'ı burada Id ile ilişkilendiriyoruz
+		    sendRequestBtn.addEventListener('click', function() {
+		        sendNotification(Id);
+		    });
+		}
+
+		function sendNotification(adId) {
+		    fetch(`http://localhost:8080/send-notification/${adId}`, {
+		        method: 'GET',
+		        credentials: 'include', // Session bilgilerini gönderir
+		    })
+		        .then(response => {
+		            if (response.ok) {
+		                return response.json();
+		            } else {
+		                throw new Error('Bildirim gönderilemedi!');
+		            }
+		        })
+		        .then(data => {
+		            alert(data.message || 'Bildirim başarıyla gönderildi!');
+		        })
+		        .catch(error => {
+		            console.error('Error:', error);
+		            alert('Bir hata oluştu: ' + error.message);
+		        });
+		}
+
+		
+		function toggleDropdown() {
+			const dropdown = document.getElementById("profileDropdown");
+			dropdown.classList.toggle("active");
+		}
+
+		function showNotifications() {
+			window.location.href = "http://localhost:8080/notifications";
+		}
+		
+		function ads() {
+			window.location.href = "http://localhost:8080/my-ads";
+		}
+
+		function logout() {
+			const loginType = localStorage.getItem("loginType");
+
+			if (loginType === "google") {
+				google.accounts.id.disableAutoSelect();
+				const googleLogoutUrl = "https://accounts.google.com/Logout";
+				google.accounts.id.revoke(localStorage.getItem("google_user_token"), () => {
+					console.log("Google oturumu sonlandırıldı.");
+				});
+				window.location.href = googleLogoutUrl;
+				return;
+			}
+
+			fetch("http://localhost:8080/user/logout", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json"
+				}
+			})
+			.then(response => {
+				if (response.ok) {
+					window.location.href = "http://localhost:8080/logout";
+				} else {
+					console.error("Logout failed:", response.statusText);
+					alert("Logout işlemi başarısız oldu.");
+				}
+			})
+			.catch(error => {
+				console.error("Error during logout:", error);
+				alert("Bir hata oluştu.");
+			});
+		}
+
+		document.addEventListener("click", (event) => {
+			const profileMenu = document.querySelector(".profile-menu");
+			const dropdown = document.getElementById("profileDropdown");
+
+			if (!profileMenu.contains(event.target)) {
+				dropdown.classList.remove("active");
+			}
+		});
+    </script>
+</body>
+</html>

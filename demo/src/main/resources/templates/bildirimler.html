@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bildirimlerim - EduShare</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        /* Genel CSS */
+		
+		*{font-family: 'Poppins', sans-serif}
+
+		
+        body {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            background-color: #f4f4f4;
+        }
+
+        /* Genel Header */
+		header {
+    		display: flex;
+    		justify-content: space-between;
+    		align-items: center;
+    		background-color: #004643;
+    		padding: 10px 20px;
+    		color: #e8e4e6;
+		}
+
+		.logo {
+    		font-size: 24px;
+    		font-weight: bold;
+		}
+
+		.navbar {
+    		display: flex;
+    		align-items: center;
+    		gap: 20px;
+		}
+
+		.navbar a {
+    		text-decoration: none;
+    		color: white;
+    		padding: 5px 10px;
+    		transition: background-color 0.3s ease;
+		}
+
+		.navbar a:hover {
+			background-color: #abd1c6;
+			border-radius: 5px;
+			color:#004643;
+		}
+
+		/* Profil Menüsü */
+		.profile-menu {
+    		position: relative;
+    		display: flex;
+    		align-items: center;
+		}
+
+		.profile-icon {
+    		width: 30px;
+    		height: 30px;
+    		display: flex;
+    		justify-content: center;
+    		align-items: center;
+    		background-color: white;
+    		color: #004643;
+    		border-radius: 50%;
+    		cursor: pointer;
+    		font-size: 18px;
+		}
+
+		/* Dropdown Menüsü */
+		.dropdown {
+    		display: none;
+    		position: absolute;
+    		top: 40px;
+    		right: 0;
+    		background-color: white;
+    		border: 1px solid #ddd;
+    		border-radius: 5px;
+    		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    		min-width: 150px;
+    		z-index: 1000;
+		}
+
+		.dropdown.active {
+    		display: block;
+		}
+
+		.dropdown-btn {
+    		display: block;
+    		width: 100%;
+    		padding: 10px;
+    		border: none;
+    		background-color: white;
+    		color: #333;
+    		font-size: 14px;
+    		text-align: left;
+    		cursor: pointer;
+    		transition: background-color 0.3s ease;
+		}
+
+		.dropdown-btn:hover {
+    		background-color: #f1f1f1;
+		}
+
+        /* İçerik */
+        .content {
+            padding: 20px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        .notification-item {
+            padding: 10px;
+            border-bottom: 10px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .notification-item.unread {
+            background-color: #e8e4e6;
+        }
+
+        .notification-item p {
+            margin: 0;
+            font-size: 14px;
+        }
+
+        .notification-item .status {
+            font-size: 10px;
+            color: #666;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 1rem;
+            background-color: #004643;
+            color: white;
+            margin-top: 2rem;
+			position: absolute;
+			left: 0;
+			bottom: 0;
+			width: 100%;
+			overflow:hidden;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Section -->
+    <header>
+        <div class="logo">EduShare</div>
+        <nav class="navbar">
+            <a href="http://localhost:8080/home" class="btn">Anasayfa</a>
+            <div class="profile-menu">
+                <div class="profile-icon" onclick="toggleDropdown()">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+                <div class="dropdown" id="profileDropdown">
+                    <button class="dropdown-btn" onclick="account()">Hesap</button>
+                    <button class="dropdown-btn" onclick="showNotifications()">Bildirimlerim</button>
+                    <button class="dropdown-btn" onclick="ads()">İlanlarım</button>
+                    <button class="dropdown-btn" onclick="logout()">Çıkış Yap</button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- İçerik -->
+    <div class="content">
+        <h2>Bildirimlerim</h2>
+        <div class="notification-item unread">
+            <p>Yeni bir ders ilanı yayınlandı</p>
+            <span class="status">Yeni</span>
+        </div>
+        <div class="notification-item">
+            <p>Ders talebiniz onaylandı</p>
+            <span class="status">Okunmuş</span>
+        </div>
+        <div class="notification-item">
+            <p>Yeni bir mesaj aldınız</p>
+            <span class="status">Okunmuş</span>
+        </div>
+        <!-- Diğer bildirimler buraya eklenecek... -->
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        &copy; 2024 EduShare. Tüm Hakları Saklıdır.
+    </footer>
+
+
+    <!-- JAVASCRIPT -->
+    <script>
+		
+		
+		document.addEventListener("DOMContentLoaded", () => {
+		    fetchNotifications();
+		});
+
+		async function fetchNotifications() {
+		    try {
+		        const response = await fetch("/my-notifications", {
+		            method: "GET",
+		            credentials: "include", // Oturum bilgilerini dahil eder
+		            headers: { "Content-Type": "application/json" }
+		        });
+
+		        // Response ok ise veriyi JSON formatında alıyoruz
+		        if (response.ok) {
+		            const notifications = await response.json(); // Yanıtı JSON olarak çözümle
+		            console.log(notifications);
+		            console.log(response.headers.get('Content-Type')); // İçerik türünü kontrol et
+
+		            // Eğer notifications bir dizi değilse (mesaj geldiği durum)
+		            if (Array.isArray(notifications)) {
+		                displayNotifications(notifications); // Bildirimleri ekrana bas
+		            } else {
+		                displayNoNotifications(notifications.message); // Bildirim yok mesajını göster
+		            }
+		        } else {
+		            const error = await response.json();
+		            throw new Error(error.message || "Bilinmeyen bir hata oluştu");
+		        }
+		    } catch (error) {
+		        console.error("Hata:", error.message);
+		        const content = document.querySelector(".content");
+		        content.innerHTML = `<p style="color: red;">${error.message}</p>`;
+		    }
+		}
+
+		function displayNotifications(notifications) {
+		    const content = document.querySelector(".content");
+		    content.innerHTML = ""; // Eski bildirimleri temizle
+
+		    notifications.forEach(notification => {
+		        const notificationText = notification.text || notification.message || "Bilinmeyen Bildirim";
+		        const notificationStatus = notification.status === "unread" ? "Yeni" : "Okunmuş";
+		        const adTitle = notification.ad ? notification.ad.title : "İlan Başlığı Yok";  // ad varsa title'ı al
+
+		        const notificationItem = `
+		            <div class="notification-item ${notification.status === "unread" ? "unread" : ""}">
+		                <p>${notificationText}</p>
+		                <span class="status">${notificationStatus}</span>
+		            </div>
+		        `;
+		        content.innerHTML += notificationItem;
+		    });
+		}
+
+		function displayNoNotifications(message) {
+		    const content = document.querySelector(".content");
+		    content.innerHTML = `<p>${message}</p>`; // Bildirim yok mesajını göster
+		}
+		
+		
+			function toggleDropdown() {
+			        const dropdown = document.getElementById("profileDropdown");
+			        dropdown.classList.toggle("active");
+			    }
+
+				function showNotifications() {
+					window.location.href = "http://localhost:8080/notifications";
+				}
+				
+				function ads(){
+					window.location.href = "http://localhost:8080/my-ads";
+				}
+
+
+					function logout() {
+					    const loginType = localStorage.getItem("loginType");
+
+					    if (loginType === "google") {
+					        // Google oturumunu sonlandır
+					        google.accounts.id.disableAutoSelect();
+
+					        // Google oturumunu sonlandırma URL'sine yönlendir
+					        const googleLogoutUrl = "https://accounts.google.com/Logout";
+
+					        // Google erişim tokenını da iptal et (isteğe bağlı)
+					        google.accounts.id.revoke(localStorage.getItem("google_user_token"), () => {
+					            console.log("Google oturumu sonlandırıldı.");
+					        });
+
+					        // Google çıkışını yaptıktan sonra logout işlemini devam ettir
+					        window.location.href = googleLogoutUrl;
+					        return; // Logout işlemi burada sonlanır
+					    }
+
+					    // Normal çıkış için backend ile iletişim kur
+					    fetch("http://localhost:8080/user/logout", {
+					        method: "POST",
+					        headers: {
+					            "Content-Type": "application/json"
+					        }
+					    })
+					    .then(response => {
+					        if (response.ok) {
+					            // Kullanıcıyı logout sayfasına yönlendir
+					            window.location.href = "http://localhost:8080/logout";
+					        } else {
+					            console.error("Logout failed:", response.statusText);
+					            alert("Logout işlemi başarısız oldu.");
+					        }
+					    })
+					    .catch(error => {
+					        console.error("Error during logout:", error);
+					        alert("Bir hata oluştu.");
+					    });
+					}
+
+			        // Profil dışında bir yere tıklandığında dropdown'ı kapat
+			        document.addEventListener("click", (event) => {
+			            const profileMenu = document.querySelector(".profile-menu");
+			            const dropdown = document.getElementById("profileDropdown");
+
+			            if (!profileMenu.contains(event.target)) {
+			                dropdown.classList.remove("active");
+			            }
+			        });
+			        
+
+    </script>
+</body>
+</html>

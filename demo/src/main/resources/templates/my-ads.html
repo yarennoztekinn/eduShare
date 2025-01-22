@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>İlanlarım</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        /* Genel Stil Ayarları */
+		
+		*{font-family: 'Poppins', sans-serif;}
+		
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f9fafb; /* Açık gri */
+            color: #333;
+        }
+
+        /* Genel Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #004643;
+            padding: 10px 20px;
+            color: #e8e4e6;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .navbar {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .navbar a {
+            text-decoration: none;
+            color: white;
+            padding: 5px 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        .navbar a:hover {
+            background-color: #abd1c6;
+			color:#e8e4e6;
+            border-radius: 5px;
+        }
+
+        /* Profil Menüsü */
+        .profile-menu {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .profile-icon {
+            width: 30px;
+            height: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: white;
+            color: #004643;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        /* Dropdown Menüsü */
+        .dropdown {
+            display: none;
+            position: absolute;
+            top: 40px;
+            right: 0;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            min-width: 150px;
+            z-index: 1000;
+        }
+
+        .dropdown.active {
+            display: block;
+        }
+
+        .dropdown-btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            border: none;
+            background-color: white;
+            color: #333;
+            font-size: 14px;
+            text-align: left;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .dropdown-btn:hover {
+            background-color: #f1f1f1;
+        }
+
+        /* Ana İçerik */
+        #ads-container {
+			display: flex;
+			flex-direction: row;
+			gap:50px;
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section h2 {
+            font-size: 28px;
+            color: #004643;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        /* Yatay Kaydırma Alanı */
+        .cards-container {
+            display: flex;
+            gap: 20px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+            scroll-behavior: smooth;
+        }
+
+        .cards-container::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .cards-container::-webkit-scrollbar-thumb {
+            background-color: #004643; /* Scroll bar rengi */
+            border-radius: 4px;
+        }
+
+        /* Kart Tasarımı */
+        .card {
+            background: #e8e4e6;
+            border: 1px solid #e2e8f0; /* Hafif gri çerçeve */
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 300px;
+			height: 320px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .card .title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #004643;
+        }
+
+        .card .method {
+            font-size: 14px;
+            background-color: #e8e4e6; /* Açık Mavi */
+            padding: 8px;
+            border-left: 4px solid #004643; /* Mavi çerçeve */
+            border-radius: 5px;
+			color: #475569;
+			flex-grow: 1; /* Yöntem kısmı kartın çoğunu kaplasın */
+			overflow-y: auto;
+			max-height: 120px;
+        }
+
+        .card .price {
+            font-size: 18px;
+            font-weight: bold;
+            color: #004643; /* YESİL fiyat */
+        }
+
+        .view-btn {
+            text-align: center;
+            background-color: #004643;
+            color: #e8e4e6;
+            text-decoration: none;
+            padding: 10px;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        .view-btn:hover {
+            background-color: #abd1c6;
+			color:#004643;
+        }
+
+        /* Empty Card */
+        .empty-card {
+            background: #e8e4e6;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .empty-card p {
+            color: #6b7280;
+            font-size: 16px;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 1rem;
+            background-color: #004643;
+            color: #e8e4e6;
+            margin-top: 800px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Header Section -->
+    <header>
+        <div class="logo">EduShare</div>
+        <nav class="navbar">
+            <a href="http://localhost:8080/home" class="btn">Anasayfa</a>
+            <div class="profile-menu">
+                <div class="profile-icon" onclick="toggleDropdown()">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+                <div class="dropdown" id="profileDropdown">
+                    <button class="dropdown-btn" onclick="account()">Hesap</button>
+                    <button class="dropdown-btn" onclick="showNotifications()">Bildirimlerim</button>
+                    <button class="dropdown-btn" onclick="ads()">İlanlarım</button>
+                    <button class="dropdown-btn" onclick="logout()">Çıkış Yap</button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Ana İçerik -->
+    <div id="ads-container">
+        <!-- Kullanıcının yarattığı ilanlar -->
+    </div>
+
+    <!-- Empty Card for no ads -->
+    <script>
+        async function loadUserAds() {
+            const adsContainer = document.getElementById('ads-container');
+
+            const ads = await fetchUserAds();
+            if (ads.length > 0) {
+                ads.forEach(ad => adsContainer.appendChild(createAdCard(ad)));
+            } else {
+                const emptyCard = createEmptyCard();
+                adsContainer.appendChild(emptyCard);
+            }
+        }
+
+        async function fetchUserAds() {
+            // Kullanıcı kimliği buraya yerleştirilmesi gerekiyor
+            const response = await fetch(`http://localhost:8080/ad/ilanlarim`,{
+				method: "GET",
+				credentials: "include", // Oturum bilgilerini dahil eder
+				headers: { "Content-Type": "application/json" }
+			});
+            const data = await response.json();
+			console.log(data);
+            return data;
+        }
+
+        function createAdCard(ad) {
+            const card = document.createElement('div');
+            card.classList.add('card');
+
+            const title = document.createElement('div');
+            title.classList.add('title');
+            title.innerText = ad.title;
+
+            const method = document.createElement('div');
+            method.classList.add('method');
+            method.innerText = ad.method;
+
+
+            const price = document.createElement('div');
+            price.classList.add('price');
+            price.innerText = `${ad.price} TL`;
+
+            const viewButton = document.createElement('a');
+            viewButton.classList.add('view-btn');
+            viewButton.href = `http://localhost:8080/ad-details?id=${ad.id}`;
+            viewButton.innerText = 'Daha Fazla Görüntüle';
+
+            card.appendChild(title);
+            card.appendChild(method);
+            card.appendChild(price);
+            card.appendChild(viewButton);
+
+            return card;
+        }
+
+        function createEmptyCard() {
+            const card = document.createElement('div');
+            card.classList.add('empty-card');
+
+            const message = document.createElement('p');
+            message.innerText = "Henüz ilanınız bulunmamakta, Hemen bir tane oluşturun!";
+
+            const createButton = document.createElement('a');
+            createButton.classList.add('view-btn');
+            createButton.href = "http://localhost:8080/create-ad";
+            createButton.innerText = 'İlan Oluştur';
+
+            card.appendChild(message);
+            card.appendChild(createButton);
+
+            return card;
+        }
+		
+		function toggleDropdown() {
+		        const dropdown = document.getElementById("profileDropdown");
+		        dropdown.classList.toggle("active");
+		    }
+
+			function showNotifications() {
+				window.location.href = "http://localhost:8080/notifications";
+			}
+			
+			function ads(){
+				window.location.href = "http://localhost:8080/my-ads";
+			}
+
+
+				function logout() {
+				    const loginType = localStorage.getItem("loginType");
+
+				    if (loginType === "google") {
+				        // Google oturumunu sonlandır
+				        google.accounts.id.disableAutoSelect();
+
+				        // Google oturumunu sonlandırma URL'sine yönlendir
+				        const googleLogoutUrl = "https://accounts.google.com/Logout";
+
+				        // Google erişim tokenını da iptal et (isteğe bağlı)
+				        google.accounts.id.revoke(localStorage.getItem("google_user_token"), () => {
+				            console.log("Google oturumu sonlandırıldı.");
+				        });
+
+				        // Google çıkışını yaptıktan sonra logout işlemini devam ettir
+				        window.location.href = googleLogoutUrl;
+				        return; // Logout işlemi burada sonlanır
+				    }
+
+				    // Normal çıkış için backend ile iletişim kur
+				    fetch("http://localhost:8080/user/logout", {
+				        method: "POST",
+				        headers: {
+				            "Content-Type": "application/json"
+				        }
+				    })
+				    .then(response => {
+				        if (response.ok) {
+				            // Kullanıcıyı logout sayfasına yönlendir
+				            window.location.href = "http://localhost:8080/logout";
+				        } else {
+				            console.error("Logout failed:", response.statusText);
+				            alert("Logout işlemi başarısız oldu.");
+				        }
+				    })
+				    .catch(error => {
+				        console.error("Error during logout:", error);
+				        alert("Bir hata oluştu.");
+				    });
+				}
+
+		        // Profil dışında bir yere tıklandığında dropdown'ı kapat
+		        document.addEventListener("click", (event) => {
+		            const profileMenu = document.querySelector(".profile-menu");
+		            const dropdown = document.getElementById("profileDropdown");
+
+		            if (!profileMenu.contains(event.target)) {
+		                dropdown.classList.remove("active");
+		            }
+		        });
+		        
+		
+				document.addEventListener('DOMContentLoaded', loadUserAds);
+
+
+    </script>
+
+    <!-- Footer Section -->
+    <footer>
+        &copy; 2024 EduShare. Tüm Hakları Saklıdır.
+    </footer>
+
+</body>
+</html>

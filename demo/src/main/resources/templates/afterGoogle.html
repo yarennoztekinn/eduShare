@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap" rel="stylesheet">
+    <title>After Google Sign-In</title>
+    <style>
+        /* Pop-up için stil */
+		
+		*{font-family: 'Poppins', sans-serif;}
+		
+        #overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            z-index: 1000;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            background-color: #004643;
+            text-align: center;
+            padding: 10px;
+            margin-bottom: 10px;
+			margin-top:10px;
+            color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            letter-spacing: 1px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+		
+		#form-container h2{
+			margin-top: 0px;
+		}
+
+        /* Uyarı pop-up stili */
+        #alertPopup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            display: none;
+            z-index: 1200;
+			width: 580px;
+        }
+
+        #alertPopup p {
+            font-size: 1.2rem;
+            text-align: center;
+        }
+
+		#alertPopup button {
+		padding: 10px 20px;
+		background: #004643;
+		color: #fff;
+		border: none;
+		border-radius: 4px;
+		cursor: pointer;
+		margin-left: 210px;
+		width: 150px;
+		font-size: 15px;
+		}       
+
+        #alertPopup button:hover {
+            background: #abd1c6;
+			color: #004643;
+        }
+
+
+        #verificationCodePopup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            display: none;
+            z-index: 1200;
+        }
+
+        #verificationCodePopup input {
+            width: 95%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        #verificationCodePopup button {
+            padding: 10px 20px;
+            background: #004643;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+			margin-left:230px;
+        }
+
+        #verificationCodePopup button:hover {
+            background: #abd1c6;
+			color:#e8e4e6;
+        }
+
+        /* Kayıt Ol Formu */
+		/* Kayıt Ol Formu */
+		#sign-up-form {
+		    display: flex;
+		    flex-direction: column;
+		    justify-content: center;
+		    align-items: center;
+		    background: #e8e4e6;
+		    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+		    border-radius: 10px;
+		    padding: 40px;
+		    max-width: 600px;
+		    width: 80%;
+		    position: absolute;
+		    top: 50%;
+		    left: 50%;
+		    transform: translate(-50%, -50%);
+		}
+
+		#sign-up-form input {
+		    width: 100%;
+		    padding: 15px;
+		    margin-bottom: 20px;
+		    border: 1px solid #ccc;
+		    border-radius: 8px;
+		    font-size: 18px;
+		}
+
+		#sign-up-form .form-actions {
+		    display: flex;
+		    justify-content: space-between;
+		    width: 100%;
+		    margin-top: 20px;
+		}
+
+		#sign-up-form .form-actions button {
+		    width: 60%;
+		    padding: 20px;
+		    background-color: #e8e4e6;
+		    color: white;
+		    border: none;
+		    border-radius: 8px;
+		    font-size: 18px;
+		    cursor: pointer;
+		    transition: background-color 0.3s ease;
+		}
+
+		#sign-up-form .form-actions button:hover {
+		    background-color: white;
+		}
+		
+		#sign-up-button{
+			width:240px;
+			height:55px;
+			background-color: #004643;
+			font-size:18px;
+			font-weight: 700px;
+			color: #e8e4e6;
+		}
+		
+    </style>
+    <script>
+		
+		let googleId;
+		
+        document.addEventListener("DOMContentLoaded", async () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            googleId = urlParams.get("googleId");
+
+            if (!googleId) {
+                showAlert("Invalid Google ID");
+                return;
+            }
+
+            const onSignInResponse = await onSignIn(googleId);
+
+        });
+
+        async function onSignIn(googleId) {
+            try {
+                const response = await searchGoogleId(googleId);
+				console.log(response);
+                if (response.exists) {
+					const sessionCreated = await createSession(googleId);
+						if (sessionCreated) {
+							showAlert("Tekrar hoşgeldiniz! Ana sayfaya yönlendiriliyorsunuz...");
+							window.location.href = "http://localhost:8080/home";
+						} else {
+							alert("oturum baslatilamadi. lutfen tekrar deneyin");
+						}
+					return true;
+                } else {
+                    showAlert("Kaydı tamamlamak için lütfen üniversite e-posta adresinizi doğrulayın.");
+					showSignUpForm(googleId);
+                    return false;
+                }
+            } catch (error) {
+                console.error("Error during Google Sign-In:", error);
+                showAlert("Bir hata oluştu. Lütfen tekrar deneyin.");
+                return false;
+            }
+        }
+
+        async function searchGoogleId(googleId) {
+            try {
+                const response = await fetch(`http://localhost:8080/user/search/${googleId}`, {
+                    method: "GET",
+                    headers: { "Content-Type": "application/json" },
+                });
+				
+				console.log("Response status:", response.status);
+
+                if (response.ok) {
+                    const data = await response.json();
+                    return { exists: data.exists };
+                } else {
+
+                    throw new Error("Failed to fetch Google ID status.");
+                }
+            } catch (error) {
+                console.error("Error searching Google ID:", error);
+                throw error;
+            }
+        }
+
+        function showSignUpForm(googleId) {
+            const formContainer = document.getElementById("form-container");
+            formContainer.innerHTML = `
+                <h2>Öğrenci kimliğinizi önemsiyoruz!</h2>
+                <p style =" text-align: center">Devam etmek için lütfen üniversite e-postanızı kullanarak kaydolun.</p>
+                <form id="sign-up-form">
+                    <label for="fullName">Ad Soyad:</label>
+                    <input type="text" id="fullName" name="fullName" required>
+                    
+                    <label for="universityMail">E-posta:</label>
+                    <input type="email" id="universityMail" name="universityMail" required>
+                    
+                    <label for="password">Şifre:</label>
+                    <input type="password" id="password" name="password" required>
+                    
+                    <label for="confirmPassword">Şifre Doğrulama:</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" required>
+                    
+                    <button type="button" id="sign-up-button">Kaydol</button>
+                </form>
+            `;
+
+            document.getElementById("sign-up-button").addEventListener("click", () => {
+                const fullName = document.getElementById("fullName").value;
+                const universityMail = document.getElementById("universityMail").value;
+                const password = document.getElementById("password").value;
+                const confirmPassword = document.getElementById("confirmPassword").value;
+
+                if (password !== confirmPassword) {
+                    showAlert("Şifreler eşleşmiyor");
+                    return;
+                }
+
+                signUpWithGoogle(googleId, fullName, universityMail, password);
+            });
+        }
+
+        async function signUpWithGoogle(googleId, fullName, universityMail, password) {
+            try {
+                const response = await fetch("http://localhost:8080/user/signup", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        googleId,
+                        fullName,
+                        universityMail,
+                        password,
+                    }),
+                });
+
+                if (response.ok) {
+                    openVerificationPopup(); // Verification popup açılıyor
+                } else {
+                    const data = await response.json();
+                    showAlert(data.message);
+                }
+            } catch (error) {
+                console.error("Error during sign up:", error);
+                showAlert("Bir hata oluştu. Lütfen tekrar deneyin.");
+            }
+        }
+
+		
+		function openVerificationPopup() {
+		    const verificationPopup = document.getElementById("verificationCodePopup");
+		    const overlay = document.getElementById("overlay");
+		    const codeSentMessage = document.getElementById("codeSentMessage");
+
+		    // "The code sent" mesajını güncelle
+		    codeSentMessage.textContent = "Lutfen okul mailinize gonderilen dogrulama kodunu giriniz";
+
+		    // Popup ve overlay'i görünür yap
+		    verificationPopup.style.display = "block";
+		    overlay.style.display = "block";
+		}
+		
+
+        async function verificationCode() {
+            const inputCode = document.getElementById("verificationCode").value;
+            if (!inputCode) {
+				closeVerificationPopup();
+                showAlert("Lütfen doğrulama kodunu giriniz!");
+                return;
+            }
+
+            try {
+                const response = await fetch("http://localhost:8080/user/verify", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ inputCode }),
+                });
+
+                if (response.ok) {
+					const sessionCreated = await createSession(googleId);
+					if (sessionCreated) {
+						const data = await response.json();
+						alert(data.message);
+						window.location.href = "http://localhost:8080/home";
+					} else {
+						alert("Oturum baslatilamadi.Lutfen tekrar deneyin");
+					}
+                } else {
+                    const data = await response.json();
+                    showAlert(data.message);
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                showAlert("Kod doğrulanırken bir hata oluştu.");
+            }
+        }
+
+        function showAlert(message) {
+            const alertPopup = document.getElementById("alertPopup");
+            const overlay = document.getElementById("overlay");
+
+            document.getElementById("alertMessage").innerText = message;
+
+            alertPopup.style.display = "block";
+            overlay.style.display = "block";
+        }
+
+        function closeAlert() {
+            const alertPopup = document.getElementById("alertPopup");
+            const overlay = document.getElementById("overlay");
+
+            alertPopup.style.display = "none";
+            overlay.style.display = "none";
+        }
+		
+		function closeVerificationPopup(){
+			const verificationPopup = document.getElementById("verificationCodePopup");
+			const overlay = document.getElementById("overlay");
+			
+			verificationPopup.style.display = "none";
+			overlay.style.display = "none";
+		}
+		
+		async function createSession(googleId) {
+		try {
+			const response = await fetch("http://localhost:8080/user/setSession", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({ googleId }),
+			});
+
+				if (response.ok) {
+					const data = await response.json();
+					console.log(data.message);
+					return true;
+				} else {
+					console.error("Failed to create session.");
+					return false;
+				}
+		} catch (error) {
+				console.error("Error creating session:", error);
+				return false;
+		}
+	}
+		
+		
+    </script>
+</head>
+<body>
+    <div id="form-container">
+        <h1>Öğrenci Hesabınız Kontrol Ediliyor...</h1>
+    </div>
+
+
+    <!-- Overlay ve Pop-up -->
+    <div id="overlay"></div>
+
+
+    <div id="alertPopup">
+        <h2>Bilgilendirme</h2>
+        <p id="alertMessage"></p>
+        <button onclick="closeAlert()">Kapat</button>
+    </div>
+
+
+    <div id="verificationCodePopup">
+        <h2>Doğrulama Kodunu Giriniz</h2>
+		<p id="codeSentMessage" class="code-sent-text">The code has been sent to your email.</p>
+        <input type="text" id="verificationCode" placeholder="Verification Code" required>
+        <button onclick="verificationCode()">Gönder</button>
+    </div>
+</body>
+</html>

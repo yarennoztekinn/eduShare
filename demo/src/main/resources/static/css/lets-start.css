@@ -1,0 +1,413 @@
+*{font-family: 'Poppins', sans-serif;}
+/* Genel Stiller */
+body {
+    margin: 0;
+    padding: 0;
+	background-color: #e8e4e6;
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.login-container {
+    display: flex;
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    overflow: hidden;
+    max-width: 900px;
+    width: 100%;
+}
+
+.logo-section {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #004643;
+    padding: 20px;
+	
+}
+
+
+/* Logo Text */
+.logo-text {
+    font-family: 'Poppins', sans-serif; /* Modern font */
+    font-size: 36px; /* Büyük yazı boyutu */
+    font-weight: bold; /* Kalın yazı */
+    color: #e8e4e6; /* Yeşil renk, sitenin temasına uygun */
+    text-align: center; /* Ortalanmış yazı */
+    margin: 0; /* Margin yok */
+    text-transform: uppercase; /* Büyük harflerle */
+    letter-spacing: 2px; /* Harf aralığı */
+    padding: 20px; /* Etrafında boşluk */
+}
+
+/* Modal Styles */
+.modal {
+  display: none; /* Hide modal by default */
+  position: fixed;
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4); /* Semi-transparent background */
+  overflow: auto;
+  padding-top: 0; /* Remove the default padding */
+  justify-content: center; /* Horizontally center */
+  align-items: center; /* Vertically center */
+
+}
+
+.modal-content {
+  background-color: white;
+  margin: 5% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  max-width: 400px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Optional, for a nice shadow effect */
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.modal input {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.modal button {
+  width: 100%;
+  padding: 10px;
+  background-color: #66BB6A;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 30px;
+  cursor: pointer;
+}
+
+.modal button:hover {
+  background-color: #388E3C;
+}
+
+
+.form-section {
+    flex: 1.2;
+    padding: 40px 20px;
+    text-align: center;
+
+}
+
+.form-section h2 {
+    margin-bottom: 20px;
+    color: #004643;
+    font-size: 24px;
+}
+
+.form-section input {
+    width: 75%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+
+}
+
+.form-section input:focus {
+	border-color: #abd1c6;
+	border: 3px solid #abd1c6;
+	outline: none;
+
+}
+
+.form-actions {
+    position: relative;
+    margin-top: 40px;
+}
+
+.form-section button {
+    width: 40%;
+    padding: 10px;
+	background-color: #abd1c6;
+    color: #004643;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: transform 0.3s ease, background 0.3s ease;
+	font-weight:400;
+}
+
+.form-section button:hover {
+    background-color: #004643;
+	color: #e8e4e6;
+    transform: scale(1.05); /* Hover'da buton büyüme efekti */
+}
+
+.forgot-password {
+    position: absolute;
+    left: 55px; /* Sol kenara hizala */
+    bottom: 70px; /* Şifre butonunun biraz altına al */
+    font-size: 14px;
+    color: #abd1c6;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.forgot-password:hover {
+    color: #004643;
+}
+
+.signup-text {
+    margin-top: 40px;
+    font-size: 15px; /* Daha büyük font */
+    color: #555;
+}
+
+.signup-text a {
+    color: #004643;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.signup-text a:hover {
+    color: #2E7D32;
+}
+
+#verificationCodePopup, #overlay {
+    display: none; /* Varsayılan olarak gizli */
+}
+
+/* Pop-up için */
+#verificationCodePopup {
+    display: none; /* Varsayılan olarak gizli */
+    position: fixed;
+    top: 50%; /* Dikey olarak ortalamak için */
+    left: 50%; /* Yatay olarak ortalamak için */
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    width: 350px;
+}
+
+/* Overlay */
+#overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+}
+
+/* Pop-up Başlık */
+.popup-header {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+/* Close Butonu */
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 18px;
+    color: #555;
+    cursor: pointer;
+}
+
+/* "The code sent" mesajı */
+.code-sent-text {
+    font-size: 14px;
+    color: #004643; /* Yeşil renk */
+    margin-top: 10px;
+    margin-bottom: 15px;
+}
+
+/* Input Alanı */
+.verification-code {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-sizing: border-box;
+}
+
+/* Enter Butonu */
+#verificationEnterBtn {
+    background-color: #004643; /* Yeşil renk */
+    color: #e8e4e6;
+    border: none;
+    padding: 12px 20px;
+    font-size: 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.3s ease;
+}
+
+#verificationEnterBtn:hover {
+    background-color: #abd1c6; /* Daha koyu yeşil */
+	color:#004643;
+}
+
+
+
+/* Linkler ve Yardım Textleri */
+.signup-text a {
+  font-size: 14px;
+  color: #388E3C;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.forgot-password:hover, .signup-text a:hover {
+  color: #2E7D32;
+}
+
+.gsi-material-button {
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    -webkit-appearance: none;
+    background-color: #131314;
+    background-image: none;
+    border: 1px solid #747775;
+    -webkit-border-radius: 20px;
+    border-radius: 20px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    color: #e3e3e3;
+    cursor: pointer;
+    font-family: 'Roboto', arial, sans-serif;
+    font-size: 14px;
+    height: 40px;
+    letter-spacing: 0.25px;
+    outline: none;
+    overflow: hidden;
+    padding: 0 12px;
+    position: relative;
+    text-align: center;
+    -webkit-transition: background-color .218s, border-color .218s, box-shadow .218s;
+    transition: background-color .218s, border-color .218s, box-shadow .218s;
+    vertical-align: middle;
+    white-space: nowrap;
+    width: auto;
+    max-width: 400px;
+    min-width: min-content;
+    border-color: #8e918f;
+  }
+  
+  .gsi-material-button .gsi-material-button-icon {
+    height: 20px;
+    margin-right: 12px;
+    min-width: 20px;
+    width: 20px;
+  }
+  
+  .gsi-material-button .gsi-material-button-content-wrapper {
+    -webkit-align-items: center;
+    align-items: center;
+    display: flex;
+    -webkit-flex-direction: row;
+    flex-direction: row;
+    -webkit-flex-wrap: nowrap;
+    flex-wrap: nowrap;
+    height: 100%;
+    justify-content: space-between;
+    position: relative;
+    width: 100%;
+  }
+  
+  .gsi-material-button .gsi-material-button-contents {
+    -webkit-flex-grow: 1;
+    flex-grow: 1;
+    font-family: 'Roboto', arial, sans-serif;
+    font-weight: 500;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: top;
+  }
+  
+  .gsi-material-button .gsi-material-button-state {
+    -webkit-transition: opacity .218s;
+    transition: opacity .218s;
+    bottom: 0;
+    left: 0;
+    opacity: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+  
+  .gsi-material-button:disabled {
+    cursor: default;
+    background-color: #13131461;
+    border-color: #8e918f1f;
+  }
+  
+  .gsi-material-button:disabled .gsi-material-button-state {
+    background-color: #e3e3e31f;
+  }
+  
+  .gsi-material-button:disabled .gsi-material-button-contents {
+    opacity: 38%;
+  }
+  
+  .gsi-material-button:disabled .gsi-material-button-icon {
+    opacity: 38%;
+  }
+  
+  .gsi-material-button:not(:disabled):active .gsi-material-button-state, 
+  .gsi-material-button:not(:disabled):focus .gsi-material-button-state {
+    background-color: white;
+    opacity: 12%;
+  }
+  
+  .gsi-material-button:not(:disabled):hover {
+    -webkit-box-shadow: 0 1px 2px 0 rgba(60, 64, 67, .30), 0 1px 3px 1px rgba(60, 64, 67, .15);
+    box-shadow: 0 1px 2px 0 rgba(60, 64, 67, .30), 0 1px 3px 1px rgba(60, 64, 67, .15);
+  }
+  
+  .gsi-material-button:not(:disabled):hover .gsi-material-button-state {
+    background-color: white;
+    opacity: 8%;
+  }
+
+  .or-text {
+    text-align: center;
+    margin: 10px 0; /* Butonla arada boşluk */
+    font-size: 12px; /* Küçük yazı */
+    color: #131314; /* Hafif gri */
+    font-family: 'Arial', sans-serif;
+}
